@@ -65,7 +65,7 @@ ENV/
 # Other file types and folders to ignore
 node_modules/
 jspm_packages/
-report.txt
+data/report.txt
 
 # Local secret files
 .secrets/
