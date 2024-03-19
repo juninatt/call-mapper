@@ -70,4 +70,3 @@ data/report.txt
 # Local secret files
 .secrets/
 /data/RequestPaths.csv
-/data/RequestPaths.csv
