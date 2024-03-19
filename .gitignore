@@ -69,4 +69,5 @@ data/report.txt
 
 # Local secret files
 .secrets/
-/RequestPaths.csv
+/data/RequestPaths.csv
+/data/RequestPaths.csv
