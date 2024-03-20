@@ -6,6 +6,8 @@ from src.report_generator import generate_csv_report
 if __name__ == "__main__":
     start_time = time.time()
 
+    print("Loading...")
+
     filepath = 'data/RequestPaths.csv'
     metadata = {
         "date_generated": time.strftime("%Y-%m-%d %H:%M:%S"),
