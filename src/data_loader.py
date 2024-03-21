@@ -6,10 +6,10 @@ def load_data(filepath):
     df = pd.read_csv(filepath, skiprows=1, header=None, usecols=[1])
 
     # Assign a column name to the loaded column.
-    df.columns = ['fields.RequestPath']
+    df.columns = ['api_calls']
 
     # Trim whitespace from the 'fields.RequestPath' column
-    df['fields.RequestPath'] = df['fields.RequestPath'].str.strip()
+    df['api_calls'] = df['api_calls'].str.strip()
 
     return df
 

@@ -1,12 +1,12 @@
 import os
 
 
-def generate_csv_report(df, metadata):
+def generate_csv(df, metadata):
     column_name = df.columns[0]
 
     # Directory paths
     project_path = os.path.join("data", "reports", f"{column_name}.csv")
-    desktop_path = os.path.expanduser(f'~\\OneDrive\\Skrivbord\\{column_name}.csv')
+    desktop_path = os.path.expanduser(f'~\\OneDrive\\Skrivbord\\västtrafik_apicalls\\{column_name}.csv')
 
     # Convert metadata to comments
     comments = '\n'.join([f"# {key}: {value}" for key, value in metadata.items()])
@@ -28,7 +28,7 @@ def save_file(filepath, df, comments):
     # Append the DataFrame to the same file
     df.to_csv(unique_filepath, mode='a', index=False, header=True)
 
-    print(f"The report has been saved to: {unique_filepath}")
+    print(f"CSV report has been saved to: {unique_filepath}")
 
 
 def get_unique_filename(filepath):
