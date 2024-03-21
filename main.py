@@ -1,7 +1,7 @@
 import time
 from src.data_loader import load_data
 from src.filters.overview_filter import generate_report
-from src.journey_filter import apply_journey_filter
+from src.filters.journey_filter import apply_journey_filter
 from src.report_generator import generate_csv
 
 if __name__ == "__main__":
@@ -16,7 +16,7 @@ if __name__ == "__main__":
 
     df = load_data('data/RequestPaths.csv')
 
-    journey_calls_df = apply_journey_filter(df, 'journey_calls')
+    journey_calls_df = apply_journey_filter(df)
 
     generate_csv(journey_calls_df, metadata)
     generate_report(df, 'data/reports/overview.txt')
