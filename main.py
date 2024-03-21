@@ -1,6 +1,7 @@
 import time
 from src.data_processing.data_loader import load_data
-from src.filtering.overview_filter import generate_report
+from src.filtering.locations_filter import apply_locations_filter
+from src.filtering.overview_filter import generate_overview
 from src.filtering.journeys_filter import apply_journey_filter
 from src.data_processing.report_generator import generate_csv
 
@@ -10,10 +11,12 @@ if __name__ == "__main__":
 
     df = load_data('data/RequestPaths.csv')
 
-    journey_calls_df = apply_journey_filter(df)
+    journey_requests_df = apply_journey_filter(df)
+    locations_requests_df = apply_locations_filter(df)
 
-    generate_csv(journey_calls_df)
-    generate_report(df, 'data/reports/overview.txt')
+    generate_csv(journey_requests_df)
+    generate_csv(locations_requests_df)
+    generate_overview(df)
 
     end_time = time.time()
     execution_time = end_time - start_time

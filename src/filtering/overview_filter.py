@@ -1,7 +1,8 @@
 import os
 
 
-def generate_report(df, report_path):
+def generate_overview(df):
+    report_path = 'data/reports/overview.txt'
     # Generate a report combining category frequencies and common 'journeys' paths, then save to report_path.
     categorized_df = categorize_urls(df)
     category_frequencies = calculate_category_frequencies(categorized_df)
@@ -16,7 +17,7 @@ def generate_report(df, report_path):
         for path, percent in common_journeys.items():
             f.write(f"{path}: {percent}%\n")
 
-    print(f"TXT report has been saved to: {report_path}")
+    print(f"Overview document saved to: {report_path}")
 
 
 def categorize_urls(df):

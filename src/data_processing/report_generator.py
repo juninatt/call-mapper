@@ -8,11 +8,11 @@ def generate_csv(df):
     project_path = os.path.join("data", "reports", f"{column_name}.csv")
     desktop_path = os.path.expanduser(f'~\\OneDrive\\Skrivbord\\västtrafik_apicalls\\{column_name}.csv')
 
-    save_file(project_path, df)  # Save inside the project
-    save_file(desktop_path, df)  # Save on the Desktop
+    # save_file(project_path, df, column_name)  # Save inside the project
+    save_file(desktop_path, df, column_name)  # Save on the Desktop
 
 
-def save_file(filepath, df):
+def save_file(filepath, df, column_name):
     # Ensures the directory exists and saves the DataFrame to a file.
     os.makedirs(os.path.dirname(filepath), exist_ok=True)
 
@@ -21,7 +21,7 @@ def save_file(filepath, df):
     # Append the DataFrame to the file
     df.to_csv(unique_filepath, mode='a', index=False, header=True)
 
-    print(f"CSV report has been saved to: {unique_filepath}")
+    print(f"'{column_name}' CSV report saved to: {unique_filepath}")
 
 
 def get_unique_filename(filepath):
