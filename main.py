@@ -8,17 +8,11 @@ if __name__ == "__main__":
     start_time = time.time()
     print("Loading...")
 
-    metadata = {
-        "date_generated": time.strftime("%Y-%m-%d %H:%M:%S"),
-        "description": "Analysis of request paths by base URL",
-        "version": "1.0"
-    }
-
     df = load_data('data/RequestPaths.csv')
 
     journey_calls_df = apply_journey_filter(df)
 
-    generate_csv(journey_calls_df, metadata)
+    generate_csv(journey_calls_df)
     generate_report(df, 'data/reports/overview.txt')
 
     end_time = time.time()
