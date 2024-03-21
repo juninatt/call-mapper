@@ -1,7 +1,7 @@
 import time
 from src.data_processing.data_loader import load_data
 from src.filtering.overview_filter import generate_report
-from src.filtering.journey_filter import apply_journey_filter
+from src.filtering.journeys_filter import apply_journey_filter
 from src.data_processing.report_generator import generate_csv
 
 if __name__ == "__main__":

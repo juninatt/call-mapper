@@ -3,7 +3,7 @@ import re
 
 
 # Apply filtering and create the final DataFrame
-def apply_journey_filter(df, column_name='api_calls', new_column='journey_requests'):
+def apply_journey_filter(df, column_name='api_calls', new_column='journeys-requests'):
     # First, filter DataFrame based on the query presence condition
     filtered_df = filter_on_query(df, column_name)
 
