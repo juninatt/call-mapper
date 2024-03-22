@@ -4,11 +4,12 @@ import pandas as pd
 
 def apply_locations_filter(df, column_name='api_calls', new_column='locations-requests'):
 
-    # Använd trim_and_extract för att förbereda data
+    # Use trim_and_extract to prepare the data
     filtered_df = trim_and_extract(df, column_name, 'locations')
 
-    # Skapa en ny DataFrame med det specificerade nya kolumnnamnet
+    # Create a new DataFrame with the specified new column name
     final_df = pd.DataFrame({new_column: filtered_df[column_name]})
 
     return final_df
+
 
