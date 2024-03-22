@@ -1,22 +1,12 @@
+from src.dataframe_cleaner.trimmer import trim_and_extract
 import pandas as pd
-import re
 
 
 def apply_stopareas_filter(df, old_column='api_calls', new_column='stopareas-requests'):
-    # Copy DataFrame to avoid SettingWithCopyWarning
-    modified_df = df.copy()
+    # Använd trim_and_extract för att förbereda data baserat på 'stopareas'
+    filtered_df = trim_and_extract(df, old_column, 'stopareas')
 
-    # Trim whitespace from strings in the specified column
-    modified_df[old_column] = modified_df[old_column].str.strip()
-
-    # Remove everything before '/v3' or '/v4'
-    modified_df[old_column] = modified_df[old_column].apply(lambda x: re.sub(r'^.*?(/v[34])', r'\1', x))
-
-    # Use regular expression to match 'stopareas' directly after the version
-    stopareas_pattern = re.compile(r'^/v[34]/stopareas')
-    modified_df = modified_df[modified_df[old_column].str.contains(stopareas_pattern, regex=True)]
-
-    # Create a new DataFrame with the specified new column name
-    final_df = pd.DataFrame({new_column: modified_df[old_column]})
+    # Skapa en ny DataFrame med det specificerade nya kolumnnamnet
+    final_df = pd.DataFrame({new_column: filtered_df[old_column]})
 
     return final_df

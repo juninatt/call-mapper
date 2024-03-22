@@ -1,3 +1,4 @@
+from src.dataframe_cleaner.trimmer import trim_and_extract
 import pandas as pd
 import re
 
@@ -5,7 +6,7 @@ import re
 # Apply filtering and create the final DataFrame
 def apply_journey_filter(df, column_name='api_calls', new_column='journeys-requests'):
     # First, filter DataFrame based on the query presence condition
-    filtered_df = filter_on_query(df, column_name)
+    filtered_df = trim_and_extract(df, column_name, 'journeys/?')
 
     # Then, strip away everything before the version part in the URL
     stripped_df = strip_and_clean_urls(filtered_df, column_name)
@@ -14,12 +15,6 @@ def apply_journey_filter(df, column_name='api_calls', new_column='journeys-reque
     final_df = pd.DataFrame({new_column: stripped_df[column_name]})
 
     return final_df
-
-
-# Filter based on the presence of a '?' directly after 'journeys'
-def filter_on_query(df, column_name='api_calls'):
-    # Filter DataFrame for rows that contain a '?' directly after 'journeys'
-    return df[df[column_name].str.contains('journeys\?.*', regex=True)]
 
 
 def strip_and_clean_urls(df, column_name='api_calls'):
