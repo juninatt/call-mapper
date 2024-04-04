@@ -1,15 +1,9 @@
 import pandas as pd
 import re
-
-from src.data_processing.progress_bar import progress_bar
-
-
-def print_in_green(text):
-    """Prints text in green in the console."""
-    print("\033[92m" + text + "\033[0m", end='')
+from src.data_processing import progress_bar
 
 
-def process_api_calls(df_api, column='api_calls'):
+def process_api_calls(title, df_api, column='api_calls'):
     """
     Extracts and organizes values from a DataFrame of API calls into a new DataFrame
     with specified columns based on regex pattern matching.
@@ -30,17 +24,17 @@ def process_api_calls(df_api, column='api_calls'):
         'originLongitude': r'originLongitude=([-+]?\d*\.\d+|\d+)',
         'destinationLongitude': r'destinationLongitude=([-+]?\d*\.\d+|\d+)'
     }
-
-    total_rows = len(df_api)
+    progress = progress_bar.ProgressBar(total=len(df_api), title="Processing " + title + " API Calls")
     for index, row in enumerate(df_api.itertuples(), start=1):
         api_call = getattr(row, column)
         temp_dict = {col: (re.search(pattern, api_call).group(1) if re.search(pattern, api_call) else 'x') for
                      col, pattern in patterns.items()}
         temp_dicts.append(temp_dict)
-        progress_bar(index, total_rows)
+        progress.update()
 
     df_result = pd.DataFrame(temp_dicts)
-    print()
+    progress.complete()
+
     return df_result
 
 

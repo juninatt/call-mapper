@@ -2,6 +2,7 @@ import os
 import pandas as pd
 
 from src.calculation.statistics_calculator import calculate_combined_statistics
+from src.data_processing.progress_bar import ProgressBar
 
 
 def generate_csv(df, file_name, create_new_file=False):
@@ -18,21 +19,7 @@ def generate_csv(df, file_name, create_new_file=False):
     os.makedirs(os.path.dirname(local_disk), exist_ok=True)
     if create_new_file:
         local_disk = get_unique_filename(local_disk)
-    df.to_csv(local_disk, mode='a', index=False, header=True)
-    print(f"'{file_name}' report saved to: {local_disk}")
-
-
-def save_file(filepath, df, file_name, create_new_file=True):
-    """
-    Ensures the directory exists and saves the DataFrame to a file.
-    If create_new_file is True, a new file is created if one already exists.
-    Otherwise, the file will be overwritten.
-    """
-    os.makedirs(os.path.dirname(filepath), exist_ok=True)
-    if create_new_file:
-        filepath = get_unique_filename(filepath)
-    df.to_csv(filepath, mode='a', index=False, header=True)
-    print(f"'{file_name}' report saved to: {filepath}")
+    df.to_csv(local_disk, mode='w', index=False, header=True)
 
 
 def get_unique_filename(filepath):
@@ -47,19 +34,24 @@ def get_unique_filename(filepath):
     return filepath
 
 
-def generate_combined_report(dataframes_with_titles, file_name):
+def generate_overview_report(dataframes_with_titles, file_name):
     """
     Generates a combined report from a list of tuples (DataFrame, Title) and saves it to a specified file.
-
-    Parameters:
-    - dataframes_with_titles (list of tuple): A list where each tuple contains a DataFrame and its title.
-    - file_name (str): The name of the file to save the report to.
+    Now includes a progress bar to display processing progress.
     """
     combined_report_str = ""
-    for df, title in dataframes_with_titles:
+    total_reports = len(dataframes_with_titles)
+
+    # Initialize the ProgressBar object with the total number of reports
+    progress = ProgressBar(total=total_reports, title="Generating Combined Report")
+
+    for index, (df, title) in enumerate(dataframes_with_titles, start=1):
         version_counts, (param_percent, param_counts) = calculate_combined_statistics(df)
         report_section = generate_report_section(title, version_counts, param_percent, param_counts)
         combined_report_str += report_section
+
+        # Update the ProgressBar object with each processed report
+        progress.update()
 
     desktop_path = os.path.expanduser(f'~\\OneDrive\\Skrivbord\\västtrafik_apicalls\\{file_name}')
     os.makedirs(os.path.dirname(desktop_path), exist_ok=True)
@@ -68,7 +60,8 @@ def generate_combined_report(dataframes_with_titles, file_name):
     with open(desktop_path, 'w') as file:
         file.write(combined_report_str)
 
-    print(f"Combined report saved to: {desktop_path}")
+    # Ensure the ProgressBar is completed
+    progress.complete()
 
 
 def generate_report_section(title, version_counts, param_percent, param_counts):
