@@ -1,45 +1,62 @@
-from src.dataframe_cleaner.trimmer import trim_and_extract
-import pandas as pd
+import pandas
 import re
+from tqdm import tqdm
+
+from src.data_processing.data_sorter import process_api_calls, extract_matching_requests
+from src.data_processing.report_generator import generate_csv
+import pandas as pd
+
+
+origin_name_pattern = r'/(v\d+)/journeys\?.*?originGid=(\d+).*?&originName=.*?&originLatitude=([\d.-]+).*?&originLongitude=([\d.-]+).*?&destinationGid=(\d+).*?&destinationName=.*?&destinationLatitude=([\d.-]+).*?&destinationLongitude=([\d.-]+)'
+origin_name_columns = ['version', 'originGid', 'destinationGid', 'originLatitude', 'originLongitude', 'destinationLatitude', 'destinationLongitude']
+
+destination_name_pattern = r'/(v\d+)/journeys\?.*?originGid=(\d+).*?destinationLatitude=([\d.-]+).*?&destinationLongitude=([\d.-]+)'
+destination_name_columns = ['version', 'originGid', 'destinationLatitude', 'destinationLongitude']
 
 
 # Apply filtering and create the final DataFrame
-def apply_journey_filter(df, column_name='api_calls', new_column='journeys-requests'):
-    # First, filter DataFrame based on the query presence condition
-    filtered_df = trim_and_extract(df, column_name, 'journeys/?')
+def journeys_filter_and_generate_csv(df, column='all_requests'):
+    # Extract all journeys calls except followed by hash
+    generate_csv(df, '/journeys/all_journeys.csv')
 
-    # Then, strip away everything before the version part in the URL
-    stripped_df = strip_and_clean_urls(filtered_df, column_name)
+    # ORIGIN_GID & ...
+    all_origin_gid_df = extract_matching_requests(df, column, 'journeys\?originGid', '=', '')
 
-    # Create a new DataFrame with the specified new column name
-    final_df = pd.DataFrame({new_column: stripped_df[column_name]})
+    # ORIGIN_NAME
+    all_origin_name_df = extract_matching_requests(all_origin_gid_df, column, 'originGid', 'originName', '')
+    final_origin_name_df = pd.DataFrame(columns=origin_name_columns)
+    final_origin_name_df[origin_name_columns] = all_origin_name_df[column].str.extract(origin_name_pattern)
+    generate_csv(final_origin_name_df, '/journeys/originGid_originName.csv')
 
-    return final_df
+    # DESTINATION_NAME
+    all_destination_name_df = extract_matching_requests(all_origin_gid_df, column, 'originGid', 'destinationName', 'originName')
+    final_destination_name_df = pd.DataFrame(columns=destination_name_columns)
+    final_destination_name_df[destination_name_columns] = all_origin_name_df[
+        column].str.extract(destination_name_pattern)
+    generate_csv(final_destination_name_df, 'journeys/originGid_destinationName.csv')
 
+    #  DATE_TIME -------------------------------------------
 
-def strip_and_clean_urls(df, column_name='api_calls'):
-    # Make a copy of the DataFrame to avoid SettingWithCopyWarning
-    modified_df = df.copy()
+    all_datetime_df = extract_matching_requests(df, column, 'v[234]', 'journeys\?dateTime=')
+    final_datetime_df = pd.DataFrame(columns=['version', 'originGid', 'destinationGid'])
+    final_datetime_df[['version', 'originGid', 'destinationGid']] = all_datetime_df[column].str.extract(
+        r'/v(\d+)/.*?originGid=(\d+)&.*?destinationGid=(\d+)',
+        expand=True
+    )
+    generate_csv(final_datetime_df, 'journeys/final_datetime.csv')
 
-    # Regular expression to match everything before "/v3/" or "/v4/"
-    version_pattern = re.compile(r'.*(/v[34]/.*)')
+    #  DATE_TIME_RELATES_TO ---------------------------------
 
-    # Regular expressions to match unwanted parameters and everything after them
-    unwanted_params_patterns = [
-        re.compile(r'&includeNearbyStopAreas.*?$'),
-        re.compile(r'&transportModes.*?$')
-    ]
+    all_datetime_relates_df = extract_matching_requests(df, column, 'v[234]', 'journeys\?dateTimeRelatesTo=')
 
-    # Strip everything before "/v3/" or "/v4/", but keep the part after
-    modified_df[column_name] = modified_df[column_name].apply(
-        lambda x: re.sub(version_pattern, r'\1', x) if pd.notnull(x) else x)
+    final_datetime_relates_df = pd.DataFrame(columns=['version', 'originGid', 'destinationGid'])
+    final_datetime_relates_df[['version', 'originGid', 'destinationGid']] = all_datetime_relates_df[column].str.extract(
+        r'/v(\d+)/.*?originGid=(\d+)&.*?destinationGid=(\d+)',
+        expand=True
+    )
+    generate_csv(all_datetime_relates_df, 'journeys/all_datetime_relates_to.csv')
+    generate_csv(final_datetime_relates_df, 'journeys/final_datetime_relates_to.csv')
 
-    # Remove unwanted parameters from the URLs
-    for pattern in unwanted_params_patterns:
-        modified_df[column_name] = modified_df[column_name].apply(
-            lambda x: re.sub(pattern, '', x) if pd.notnull(x) else x)
-
-    return modified_df
 
 
 
