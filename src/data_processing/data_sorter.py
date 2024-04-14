@@ -1,48 +1,21 @@
 import pandas as pd
 import re
-from src.data_processing import progress_bar
 
 
-def process_api_calls(title, df_api, column='api_calls'):
-    """
-    Extracts and organizes values from a DataFrame of API calls into a new DataFrame
-    with specified columns based on regex pattern matching.
-    """
-    columns = [
-        'version', 'originGid', 'destinationGid',
-        'originLatitude', 'destinationLatitude',
-        'originLongitude', 'destinationLongitude'
-    ]
-    temp_dicts = []
+def process(df, pattern, columns, column='all_requests'):
+    sorted_df = pd.DataFrame(columns=columns)
+    sorted_df[columns] = df[
+        column].str.extract(pattern)
 
-    patterns = {
-        'version': r'/(v\d+)/',
-        'originGid': r'originGid=(\d+)',
-        'destinationGid': r'destinationGid=(\d+)',
-        'originLatitude': r'originLatitude=([-+]?\d*\.\d+|\d+)',
-        'destinationLatitude': r'destinationLatitude=([-+]?\d*\.\d+|\d+)',
-        'originLongitude': r'originLongitude=([-+]?\d*\.\d+|\d+)',
-        'destinationLongitude': r'destinationLongitude=([-+]?\d*\.\d+|\d+)'
-    }
-    progress = progress_bar.ProgressBar(total=len(df_api), title="Processing " + title + " API Calls")
-    for index, row in enumerate(df_api.itertuples(), start=1):
-        api_call = getattr(row, column)
-        temp_dict = {col: (re.search(pattern, api_call).group(1) if re.search(pattern, api_call) else 'x') for
-                     col, pattern in patterns.items()}
-        temp_dicts.append(temp_dict)
-        progress.update()
-
-    df_result = pd.DataFrame(temp_dicts)
-    progress.complete()
-
-    return df_result
+    return sorted_df
 
 
-def extract_matching_requests(df, column, a, b, x=''):
+def extract_matching_requests(df, a, b, x=''):
     """
     Filters a DataFrame based on the presence of specified strings ('a' and 'b')
     and the absence of an optional string ('x') in a specified column.
     """
+    column = 'all_requests'
     df_modified = strip_first_part(df, column)
 
     condition = (df_modified[column].str.contains(a)) & (df_modified[column].str.contains(b))
@@ -52,13 +25,15 @@ def extract_matching_requests(df, column, a, b, x=''):
 
 
 def extract_non_matching_requests(original_df, matched_dfs):
-    """
-    Creates a DataFrame consisting of rows from the original DataFrame
-    that do not match any row in the list of matched DataFrames.
-    """
-    non_matched_df = original_df.copy()
+
+    all_matched_indices = []
+
     for matched_df in matched_dfs:
-        non_matched_df = non_matched_df.drop(matched_df.index)
+        all_matched_indices.extend(matched_df.index)
+
+    mask = ~original_df.index.isin(all_matched_indices)
+
+    non_matched_df = original_df[mask]
     return non_matched_df
 
 
