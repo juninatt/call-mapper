@@ -7,7 +7,17 @@ The functionality will be expanded in the future to accommodate a wider range of
 ## Getting Started
 To run this project, ensure you have Python installed on your system. See requirements.txt for dependencies.
 
+## Configuration
 
+Before running the script, please create a .env file in the root directory of the project and populate it with your specific API patterns and associated column names. 
+This setup is crucial for the script to process data correctly according to your needs. 
+Define each pattern and its corresponding columns as shown in the example below, adapting them to fit the API calls and data structure you intend to analyze.
+
+Example variable setup in .env file:
+```bash
+DEFAULT_PATTERN="/api/example/pattern"
+EXAMPLE_COLUMNS="column1,column2,column3"
+```
 ## Running the Script
 To execute the main script of this project, follow these steps:
 
