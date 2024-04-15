@@ -29,10 +29,9 @@ bycoordinates_columns = get_columns('LOCATIONS_BYCOORDINATES_COLUMNS')
 
 
 def process_locations_calls(df):
-    separation_progress = ProgressBar(total=6, title="Processing /locations/")
+    separation_progress = ProgressBar(total=6, title="Processing url path: locations")
 
-    # BY_TEXT (v4)
-
+    # Text v4 (by-text)
     locations_by_text_full_df = extract_matching_requests(
         df,
         'locations',
@@ -45,7 +44,7 @@ def process_locations_calls(df):
     )
     separation_progress.update()
 
-# BYTEXT (v2 & v3)
+    # Text v2 & v3 (bytext)
     locations_bytext_full_df = extract_matching_requests(
         df,
         'locations',
@@ -58,8 +57,7 @@ def process_locations_calls(df):
     )
     separation_progress.update()
 
-    # BY_COORDINATES (v4)
-
+    # Coordinates v4 (by-coordinates)
     locations_by_coordinates_full_df = extract_matching_requests(
         df,
         'locations',
@@ -72,8 +70,7 @@ def process_locations_calls(df):
     )
     separation_progress.update()
 
-    # BYCOORDINATES (v2 & v3)
-
+    # Coordinates v2 & v3 (bycoordinates)
     locations_bycoordinates_full_df = extract_matching_requests(
         df,
         'locations',
@@ -128,4 +125,5 @@ def process_locations_calls(df):
         locations_by_coordinates_processed_df,
         'locations/locations_by_coordinates_processed.csv'
     )
+
     separation_progress.complete()

@@ -30,7 +30,7 @@ coords_to_gid_columns = get_columns('ORIGIN_COORDINATES_DESTINATION_GID_COLUMNS'
 
 # Apply filtering and create the final DataFrame
 def journeys_filter_and_generate_csv(df):
-    separation_progress = ProgressBar(total=15 , title="Processing /journeys/")
+    separation_progress = ProgressBar(total=15, title="Processing url path: journeys")
 
     # urls: originGid, dateTimeRelatesTo, dateTime, originName
 
