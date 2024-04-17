@@ -1,5 +1,5 @@
-import pandas as pd
 import re
+import pandas as pd
 
 
 def process(df, pattern, columns, column='all_requests'):
