@@ -29,10 +29,10 @@ coords_to_gid_columns = get_columns('ORIGIN_COORDINATES_DESTINATION_GID_COLUMNS'
 
 
 # Apply filtering and create the final DataFrame
-def journeys_filter_and_generate_csv(df):
+def process_journeys(df):
     separation_progress = ProgressBar(total=15, title="Processing url path: journeys")
 
-    # urls: originGid, dateTimeRelatesTo, dateTime, originName
+    # urls: originGid, dateTime, dateTimeRelatesTo, originName
 
     # ORIGIN_GID
 
@@ -79,38 +79,6 @@ def journeys_filter_and_generate_csv(df):
         gid_to_coords_columns
     )
     separation_progress.update()
-
-    # Unprocessed
-    generate_csv(
-        originGid_full_df,
-        'journeys/originGid/unprocessed/all_originGid.csv'
-    )
-    generate_csv(
-        originGid_destinationGid_full_df,
-        '/journeys/originGid/unprocessed/originGid_destinationGid.csv'
-    )
-    generate_csv(
-        originGid_destinationCoordinates_full_df,
-        'journeys/originGid/unprocessed/originGid_destinationCoordinates.csv'
-    )
-    generate_csv(
-        originGid_allCoordinates_full_df,
-        'journeys/originGid/unprocessed/originGid_coords_to_coords.csv'
-    )
-
-    # Processed
-    generate_csv(
-        originGid_destinationGid_processed_df,
-        '/journeys/originGid/originGid_destinationGid.csv'
-    )
-    generate_csv(
-        originGid_allCoordinates_processed_df,
-        'journeys/originGid/originGid_allCoordinates.csv'
-    )
-    generate_csv(
-        originGid_destinationCoordinates_processed_df,
-        'journeys/originGid/originGid_destinationCoordinates.csv'
-    )
 
     #  DATE_TIME
 
@@ -168,46 +136,6 @@ def journeys_filter_and_generate_csv(df):
     )
     separation_progress.update()
 
-    # Unprocessed
-    generate_csv(
-        dateTime_full_df,
-        'journeys/dateTime/unprocessed/all_dateTime.csv'
-    )
-    generate_csv(
-        dateTime_originGid_destinationGid_full_df,
-        'journeys/dateTime/unprocessed/dateTime_originGid_destinationGid.csv'
-    )
-    generate_csv(
-        dateTime_originGid_destinationCoordinates_full_df,
-        'journeys/dateTime/unprocessed/dateTime_originGid_destinationCoordinates.csv'
-    )
-    generate_csv(
-        dateTime_originCoordinates_destinationCoordinates_full_df,
-        'journeys/dateTime/unprocessed/dateTime_originCoordinates_destinationCoordinates.csv'
-    )
-    generate_csv(
-        dateTime_originCoordinates_destinationGid_full_df,
-        'journeys/dateTime/unprocessed/dateTime_originCoordinates_destinationGid.csv'
-    )
-
-    # Processed
-    generate_csv(
-        dateTime_originGid_destinationGid_processed_df,
-        'journeys/dateTime/dateTime_originGid_destinationGid.csv'
-    )
-    generate_csv(
-        dateTime_originGid_destinationCoordinates_processed_df,
-        'journeys/dateTime/dateTime_originGid_destinationCoordinates.csv'
-    )
-    generate_csv(
-        dateTime_originCoordinates_destinationCoordinates_processed_df,
-        'journeys/dateTime/dateTime_originCoordinates_destinationCoordinates.csv'
-    )
-    generate_csv(
-        dateTime_originCoordinates_destinationGid_processed_df,
-        'journeys/dateTime/dateTime_originCoordinates_destinationGid.csv'
-    )
-
     #  DATE_TIME_RELATES_TO
 
     dateTimeRelatesTo_full_df = extract_matching_requests(
@@ -264,45 +192,6 @@ def journeys_filter_and_generate_csv(df):
     )
     separation_progress.update()
 
-    # Unprocessed
-    generate_csv(
-        dateTimeRelatesTo_full_df,
-        '/journeys/dateTimeRelatesTo/unprocessed/all_dateTimeRelatesTo.csv'
-    )
-    generate_csv(
-        dateTimeRelatesTo_originGid_destinationCoordinates_full_df,
-        '/journeys/dateTimeRelatesTo/unprocessed/dateTimeRelatesTo_originGid_destinationCoordinates.csv'
-    )
-    generate_csv(
-        dateTimeRelatesTo_originGid_destinationGid_full_df,
-        '/journeys/dateTimeRelatesTo/unprocessed/dateTimeRelatesTo_originGid_destinationGid.csv'
-    )
-    generate_csv(
-        dateTimeRelatesTo_originCoordinates_destinationGid_full_df,
-        '/journeys/dateTimeRelatesTo/unprocessed/dateTimeRelatesTo_originCoordinates_destinationGid.csv'
-    )
-    generate_csv(
-        dateTimeRelatesTo_originCoordinates_destinationCoordinates_full_df,
-        '/journeys/dateTimeRelatesTo/unprocessed/dateTimeRelatesTo_originCoordinates_destinationCoordinates.csv'
-    )
-
-    # Processed
-    generate_csv(
-        dateTimeRelatesTo_originGid_destinationGid_processed_df,
-        '/journeys/dateTimeRelatesTo/dateTimeRelatesTo_originGid_destinationGid.csv'
-    )
-    generate_csv(
-        dateTimeRelatesTo_originGid_destinationCoordinates_processed_df,
-        '/journeys/dateTimeRelatesTo/dateTimeRelatesTo_originGid_destinationCoordinates.csv'
-    )
-    generate_csv(
-        dateTimeRelatesTo_originCoordinates_destinationGid_processed_df,
-        '/journeys/dateTimeRelatesTo/dateTimeRelatesTo_originCoordinates_destinationGid.csv'
-    )
-    generate_csv(
-        dateTimeRelatesTo_originCoordinates_destinationCoordinates_processed_df,
-        '/journeys/dateTimeRelatesTo/dateTimeRelatesTo_originCoordinates_destinationCoordinates.csv'
-    )
 
     # ORIGIN_NAME
 
@@ -363,46 +252,6 @@ def journeys_filter_and_generate_csv(df):
     )
     separation_progress.update()
 
-    # Unprocessed
-    generate_csv(
-        originName_full_df,
-        '/journeys/originName/unprocessed/all_originName.csv'
-    )
-    generate_csv(
-        originName_originGid_destinationGid_full_df,
-        '/journeys/originName/unprocessed/originName_originGid_destinationGid.csv'
-    )
-    generate_csv(
-        originName_originGid_destinationCoordinates_full_df,
-        '/journeys/originName/unprocessed/originName_originGid_destinationCoordinates .csv'
-    )
-    generate_csv(
-        originName_originCoordinates_destinationGid_full_df,
-        '/journeys/originName/unprocessed/originName_originCoordinates_destinationGid.csv'
-    )
-    generate_csv(
-        originName_originCoordinates_destinationCoordinates_full_df,
-        '/journeys/originName/unprocessed/originName_originCoordinates_destinationCoordinates.csv'
-    )
-
-    # Processed
-    generate_csv(
-        originName_originGid_destinationGid_processed_df,
-        '/journeys/originName/originName_originGid_destinationGid.csv'
-    )
-    generate_csv(
-        originName_originCoordinates_destinationCoordinates_processed_df,
-        '/journeys/originName/originName_originGid_destinationCoordinates.csv'
-    )
-    generate_csv(
-        originName_originCoordinates_destinationGid_processed_df,
-        '/journeys/originName/originName_originCoordinates_destinationGid.csv'
-    )
-    generate_csv(
-        originName_originGid_destinationCoordinates_processed_df,
-        '/journeys/originName/originName_originGid_destinationCoordinates.csv'
-    )
-
     hashes = extract_non_matching_requests(
         df,
         [originGid_full_df,
@@ -414,3 +263,60 @@ def journeys_filter_and_generate_csv(df):
     generate_csv(hashes, 'journeys/leftovers.csv')
 
     separation_progress.complete()
+
+    return {
+        "/journeys/originGid/unprocessed/": [
+            (originGid_full_df, 'all_originGid_unprocessed.csv'),
+            (originGid_destinationGid_full_df, 'originGid_destinationGid.csv'),
+            (originGid_allCoordinates_full_df, 'originGid_coords_to_coords.csv'),
+            (originGid_destinationCoordinates_full_df, 'originGid_destinationCoordinates.csv')
+        ],
+        "/journeys/originGid/processed/": [
+            (originGid_destinationGid_processed_df, '/originGid_destinationGid.csv'),
+            (originGid_allCoordinates_processed_df, '/originGid/originGid_allCoordinates.csv'),
+            (originGid_destinationCoordinates_processed_df, '/originGid_destinationCoordinates.csv'),
+        ],
+        "/journeys/dateTime/unprocessed/": [
+            (dateTime_full_df, 'all_dateTime.csv'),
+            (dateTime_originGid_destinationGid_full_df, 'dateTime_originGid_destinationGid.csv'),
+            (dateTime_originGid_destinationCoordinates_full_df, 'dateTime_originGid_destinationCoordinates.csv'),
+            (dateTime_originCoordinates_destinationCoordinates_full_df, 'dateTime_originCoordinates_destinationCoordinates.csv'),
+            (dateTime_originCoordinates_destinationGid_full_df, 'dateTime_originCoordinates_destinationGid.csv')
+        ],
+        "/journeys/dateTime/processed/": [
+            (dateTime_originGid_destinationGid_processed_df, 'dateTime_originGid_destinationGid.csv'),
+            (dateTime_originGid_destinationCoordinates_processed_df, 'dateTime_originGid_destinationCoordinates.csv'),
+            (dateTime_originCoordinates_destinationCoordinates_processed_df, 'dateTime_originCoordinates_destinationCoordinates.csv'),
+            (dateTime_originCoordinates_destinationGid_processed_df, 'dateTime_originCoordinates_destinationGid.csv'),
+        ],
+        "/journeys/dateTimeRelatesTo/unprocessed/": [
+            (dateTimeRelatesTo_full_df, 'all_dateTimeRelatesTo.csv'),
+            (dateTimeRelatesTo_originGid_destinationCoordinates_full_df, 'dateTimeRelatesTo_originGid_destinationCoordinates.csv'),
+            (dateTimeRelatesTo_originGid_destinationGid_full_df, 'dateTimeRelatesTo_originGid_destinationGid.csv'),
+            (dateTimeRelatesTo_originCoordinates_destinationGid_full_df, 'dateTimeRelatesTo_originCoordinates_destinationGid.csv'),
+            (dateTimeRelatesTo_originCoordinates_destinationCoordinates_full_df, 'dateTimeRelatesTo_originCoordinates_destinationCoordinates.csv')
+        ],
+
+        "/journeys/dateTimeRelatesTo/processed/": [
+            (dateTimeRelatesTo_originGid_destinationGid_processed_df, 'dateTimeRelatesTo_originGid_destinationGid.csv'),
+            (dateTimeRelatesTo_originGid_destinationCoordinates_processed_df, 'dateTimeRelatesTo_originGid_destinationCoordinates.csv'),
+            (dateTimeRelatesTo_originCoordinates_destinationGid_processed_df, 'dateTimeRelatesTo_originCoordinates_destinationGid.csv'),
+            (dateTimeRelatesTo_originCoordinates_destinationCoordinates_processed_df, 'dateTimeRelatesTo_originCoordinates_destinationCoordinates.csv'),
+        ],
+        "/journeys/originName/unprocessed/": [
+            (originName_full_df, 'all_originName.csv'),
+            (originName_originGid_destinationGid_full_df, 'originName_originGid_destinationGid.csv'),
+            (originName_originGid_destinationCoordinates_full_df, 'originName_originGid_destinationCoordinates.csv'),
+            (originName_originCoordinates_destinationGid_full_df, 'originName_originCoordinates_destinationGid.csv'),
+            (originName_originCoordinates_destinationCoordinates_full_df, 'originName_originCoordinates_destinationCoordinates.csv'),
+        ],
+        "/journeys/originName/processed/": [
+            (originName_originGid_destinationGid_processed_df, 'originName_originGid_destinationGid.csv'),
+            (originName_originGid_destinationCoordinates_processed_df, 'originName_originGid_destinationCoordinates.csv'),
+            (originName_originCoordinates_destinationGid_processed_df, 'originName_originCoordinates_destinationGid.csv'),
+            (originName_originCoordinates_destinationCoordinates_processed_df, 'originName_originCoordinates_destinationCoordinates.csv'),
+        ],
+        "/journeys/": [
+            (hashes, 'journeys_hashes.csv')
+        ]
+    }

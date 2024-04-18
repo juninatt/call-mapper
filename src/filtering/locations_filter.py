@@ -25,7 +25,7 @@ bycoordinates_pattern = os.getenv('LOCATIONS_BYCOORDINATES_PATTERN')
 bycoordinates_columns = get_columns('LOCATIONS_BYCOORDINATES_COLUMNS')
 
 
-def process_locations_calls(df):
+def process_locations(df):
     separation_progress = ProgressBar(total=6, title="Processing url path: locations")
 
     # Text v4 (by-text)
@@ -78,24 +78,20 @@ def process_locations_calls(df):
         bycoordinates_pattern,
         bycoordinates_columns
     )
-    separation_progress.update()
+    separation_progress.complete()
 
-    dataframes = {
-        "locations/unprocessed": [
+    return {
+        "/locations/unprocessed/": [
             (df, 'all_locations_unprocessed.csv'),
             (locations_by_text_full_df, 'locations_by_text_unprocessed.csv'),
             (locations_bytext_full_df, 'locations_bytext_unprocessed.csv'),
             (locations_by_coordinates_full_df, 'locations_by_coordinates_unprocessed.csv'),
             (locations_bycoordinates_full_df, 'locations_bycoordinates_unprocessed.csv')
         ],
-        "locations/processed": [
+        "/locations/processed/": [
             (locations_by_text_processed_df, 'locations_by_text_processed.csv'),
             (locations_bytext_processed_df, 'locations_bytext_processed.csv'),
             (locations_by_coordinates_processed_df, 'locations_by_coordinates_processed.csv'),
-            (locations_bycoordinates_processed_df, 'locations_bycoordinates_processed.csv')
+            (locations_bycoordinates_processed_df, 'locations_bycoordinates_processed.csv'),
         ]
     }
-
-    separation_progress.complete()
-
-    return dataframes
